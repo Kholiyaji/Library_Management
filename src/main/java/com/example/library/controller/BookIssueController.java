@@ -1,5 +1,7 @@
-package com.example.library;
+package com.example.library.controller;
 
+import com.example.library.model.BookIssue;
+import com.example.library.service.BookIssueService;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;

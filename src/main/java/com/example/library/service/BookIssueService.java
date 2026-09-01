@@ -1,6 +1,15 @@
-package com.example.library;
+package com.example.library.service;
 
+import com.example.library.exception.LibraryException;
+import com.example.library.model.Book;
+import com.example.library.model.BookIssue;
+import com.example.library.model.IssueStatus;
+import com.example.library.model.Member;
+import com.example.library.repository.BookIssueRepository;
+import com.example.library.repository.BookRepository;
+import com.example.library.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,19 +28,18 @@ public class BookIssueService {
         this.memberRepo = memberRepo;
     }
 
+    // Issue Book
     public BookIssue issueBook(Long bookId, Long memberId, LocalDate dueDate) {
 
-        Book book = bookRepo.findById(bookId).orElse(null);
-        Member member = memberRepo.findById(memberId).orElse(null);
+        Book book = bookRepo.findById(bookId)
+                .orElseThrow(() -> new LibraryException("Book not found"));
 
-        if (book == null)
-            throw new RuntimeException("Book not found");
+        Member member = memberRepo.findById(memberId)
+                .orElseThrow(() -> new LibraryException("Member not found"));
 
-        if (member == null)
-            throw new RuntimeException("Member not found");
-
-        if (book.getAvailableCopies() <= 0)
-            throw new RuntimeException("Book not available");
+        if (book.getAvailableCopies() <= 0) {
+            throw new LibraryException("Book not available");
+        }
 
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepo.save(book);
@@ -40,18 +48,20 @@ public class BookIssueService {
         issue.setBook(book);
         issue.setMember(member);
         issue.setIssueDate(LocalDate.now());
-        issue.setDueDate(LocalDate.now().plusDays(7));
+        issue.setDueDate(dueDate);
         issue.setStatus(IssueStatus.ISSUED);
 
         return issueRepo.save(issue);
     }
 
+    // Return Book
     public BookIssue returnBook(Long id) {
 
-        BookIssue issue = issueRepo.findById(id).orElse(null);
+        BookIssue issue = issueRepo.findById(id)
+                .orElseThrow(() -> new LibraryException("Issue not found"));
 
-        if (issue == null) {
-            return null;
+        if (issue.getStatus() == IssueStatus.RETURNED) {
+            throw new LibraryException("Book already returned");
         }
 
         issue.setReturnDate(LocalDate.now());
@@ -64,11 +74,16 @@ public class BookIssueService {
         return issueRepo.save(issue);
     }
 
+    // Currently Issued Books
     public List<BookIssue> getAllIssued() {
-        return issueRepo.findAll();
+        return issueRepo.findByStatus(IssueStatus.ISSUED);
     }
+
+    // Overdue Books
     public List<BookIssue> getOverdue() {
         return issueRepo.findByDueDateBeforeAndStatus(
-                LocalDate.now(), IssueStatus.ISSUED);
+                LocalDate.now(),
+                IssueStatus.ISSUED
+        );
     }
 }

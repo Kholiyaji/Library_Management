@@ -1,5 +1,8 @@
-package com.example.library;
+package com.example.library.service;
 
+import com.example.library.exception.LibraryException;
+import com.example.library.model.Member;
+import com.example.library.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -21,7 +24,8 @@ public class MemberService {
     }
 
     public Member getMember(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new LibraryException("Member not found"));
     }
 
     public Member updateMember(Long id, Member member) {
@@ -30,6 +34,11 @@ public class MemberService {
     }
 
     public void deleteMember(Long id) {
+
+        if (!repository.existsById(id)) {
+            throw new LibraryException("Member not found");
+        }
+
         repository.deleteById(id);
     }
 }
