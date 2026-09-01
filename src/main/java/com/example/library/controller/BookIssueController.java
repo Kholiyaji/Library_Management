@@ -2,7 +2,9 @@ package com.example.library.controller;
 
 import com.example.library.model.BookIssue;
 import com.example.library.service.BookIssueService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,27 +19,28 @@ public class BookIssueController {
     }
 
     @PostMapping
-    public BookIssue issueBook(@RequestParam Long bookId,
-                               @RequestParam Long memberId,
-                               @RequestParam String dueDate) {
-        return service.issueBook(
-                bookId,
-                memberId,
-                LocalDate.parse(dueDate)
+    public ResponseEntity<BookIssue> issueBook(
+            @RequestParam Long bookId,
+            @RequestParam Long memberId,
+            @RequestParam LocalDate dueDate) {
+
+        return ResponseEntity.ok(
+                service.issueBook(bookId, memberId, dueDate)
         );
     }
 
     @PutMapping("/{id}/return")
-    public BookIssue returnBook(@PathVariable Long id) {
-        return service.returnBook(id);
+    public ResponseEntity<BookIssue> returnBook(@PathVariable Long id) {
+        return ResponseEntity.ok(service.returnBook(id));
     }
 
     @GetMapping("/issued")
-    public List<BookIssue> issuedBooks() {
-        return service.getAllIssued();
+    public ResponseEntity<List<BookIssue>> getIssuedBooks() {
+        return ResponseEntity.ok(service.getAllIssued());
     }
+
     @GetMapping("/overdue")
-    public List<BookIssue> overdue() {
-        return service.getOverdue();
+    public ResponseEntity<List<BookIssue>> getOverdueBooks() {
+        return ResponseEntity.ok(service.getOverdue());
     }
 }

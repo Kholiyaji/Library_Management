@@ -4,6 +4,7 @@ import com.example.library.model.Book;
 import com.example.library.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -27,25 +28,19 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+    public ResponseEntity<Book> getBook(@PathVariable Long id) {
         return ResponseEntity.ok(service.getBookById(id));
     }
 
     @PutMapping("/{id}")
-    public Book updateBook(@PathVariable Long id, @RequestBody Book book) {
-        return service.updateBook(id, book);
+    public ResponseEntity<Book> updateBook(@PathVariable Long id,
+                                           @RequestBody Book book) {
+        return ResponseEntity.ok(service.updateBook(id, book));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBook(@PathVariable Long id) {
-
         service.deleteBook(id);
-
         return ResponseEntity.ok("Book deleted successfully");
-    }
-
-    @GetMapping("/search")
-    public List<Book> search(@RequestParam String title) {
-        return service.search(title);
     }
 }

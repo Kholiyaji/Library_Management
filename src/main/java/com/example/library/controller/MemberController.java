@@ -4,6 +4,7 @@ import com.example.library.model.Member;
 import com.example.library.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -17,28 +18,28 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Member> add(@RequestBody Member member) {
+    public ResponseEntity<Member> addMember(@RequestBody Member member) {
         return ResponseEntity.ok(service.addMember(member));
     }
 
     @GetMapping
-    public ResponseEntity<List<Member>> getAll() {
+    public ResponseEntity<List<Member>> getAllMembers() {
         return ResponseEntity.ok(service.getAllMembers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Member> get(@PathVariable Long id) {
+    public ResponseEntity<Member> getMember(@PathVariable Long id) {
         return ResponseEntity.ok(service.getMember(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Member> update(@PathVariable Long id,
-                                         @RequestBody Member member) {
+    public ResponseEntity<Member> updateMember(@PathVariable Long id,
+                                               @RequestBody Member member) {
         return ResponseEntity.ok(service.updateMember(id, member));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<String> deleteMember(@PathVariable Long id) {
         service.deleteMember(id);
         return ResponseEntity.ok("Member deleted successfully");
     }
