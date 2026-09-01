@@ -1,6 +1,6 @@
 
 
-package com.example.LibraryManagementSystem.exeption;
+package com.example.LibraryManagementSystem.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

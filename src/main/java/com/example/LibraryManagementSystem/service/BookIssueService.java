@@ -3,6 +3,7 @@ package com.example.LibraryManagementSystem.service;
 import com.example.LibraryManagementSystem.entity.Book;
 import com.example.LibraryManagementSystem.entity.BookIssue;
 import com.example.LibraryManagementSystem.entity.Member;
+import com.example.LibraryManagementSystem.exception.ResourceNotFoundException;
 import com.example.LibraryManagementSystem.repository.BookIssueRepository;
 import com.example.LibraryManagementSystem.repository.BookRepository;
 import com.example.LibraryManagementSystem.repository.MemberRepository;
@@ -28,17 +29,23 @@ public class BookIssueService {
         this.memberRepository = memberRepository;
     }
 
+    // Issue Book
     public BookIssue issueBook(Long bookId, Long memberId, LocalDate dueDate) {
 
-        Book book = bookRepository.findById(bookId).orElse(null);
-        Member member = memberRepository.findById(memberId).orElse(null);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Book not found with id: " + bookId
+                        ));
 
-        if (book == null || member == null) {
-            return null;
-        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Member not found with id: " + memberId
+                        ));
 
         if (book.getAvailableCopies() <= 0) {
-            return null;
+            throw new IllegalArgumentException("Book is not available");
         }
 
         BookIssue issue = new BookIssue();
@@ -56,13 +63,14 @@ public class BookIssueService {
         return bookIssueRepository.save(issue);
     }
 
+    // Return Book
     public BookIssue returnBook(Long issueId) {
 
-        BookIssue issue = bookIssueRepository.findById(issueId).orElse(null);
-
-        if (issue == null) {
-            return null;
-        }
+        BookIssue issue = bookIssueRepository.findById(issueId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Book issue not found with id: " + issueId
+                        ));
 
         issue.setReturnDate(LocalDate.now());
         issue.setStatus(BookIssue.Status.RETURNED);
@@ -76,6 +84,7 @@ public class BookIssueService {
         return bookIssueRepository.save(issue);
     }
 
+    // Get Currently Issued Books
     public List<BookIssue> getIssuedBooks() {
 
         return bookIssueRepository.findByStatus(
@@ -83,6 +92,7 @@ public class BookIssueService {
         );
     }
 
+    // Get Overdue Books
     public List<BookIssue> getOverdueBooks() {
 
         List<BookIssue> issues =
