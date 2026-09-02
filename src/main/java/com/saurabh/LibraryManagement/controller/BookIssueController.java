@@ -13,18 +13,22 @@ public class BookIssueController {
 
     @Autowired
     private BookissueService bookissueservice;
-    @PostMapping("/issue")
-    public BookIssueEntity issueBook(@PathVariable Long bookid, @PathVariable Long memberid){
+    @PostMapping("/issue/{bookid}/{memberid}")
+    public BookIssueEntity issueBook(
+            @PathVariable("bookid") Long bookid,
+            @PathVariable("memberid") Long memberid) {
+
         return bookissueservice.issueBook(bookid, memberid);
     }
-
-    @PutMapping("/return")
+    @PutMapping("/return/{issueid}")
     public BookIssueEntity returnBook(@PathVariable Long issueid){
         return bookissueservice.returnBook(issueid);
     }
-    @GetMapping("issued")
+    @GetMapping("issuedbooks")
     public List<BookIssueEntity> issuedBooks(){
         return bookissueservice.viewBooks();
     }
+
+
 
 }

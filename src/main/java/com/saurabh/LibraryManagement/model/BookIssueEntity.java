@@ -1,6 +1,6 @@
 package com.saurabh.LibraryManagement.model;
 
-import ch.qos.logback.core.status.Status;
+//import ch.qos.logback.core.status.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class BookIssueEntity {
      private LocalDate issuedate;
      private LocalDate duedate;
     private LocalDate returndate;
-    private Status status;
+//    private Status status;
 
     public Long getIssueid() {
         return issueid;
@@ -72,13 +72,13 @@ public class BookIssueEntity {
         this.returndate = returndate;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+//    public Status getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(Status status) {
+//        this.status = status;
+//    }
 
 
 }

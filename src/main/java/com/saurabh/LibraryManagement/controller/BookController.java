@@ -27,14 +27,20 @@ public class BookController {
     }
 
     @DeleteMapping("/deletebook/{bookid}")
-    public void deleteBook(@PathVariable Long bookid) {
+    public String deleteBook(@PathVariable Long bookid) {
         bookservice.deleteBook(bookid);
+        return "deleted successfully";
     }
 
     @GetMapping("/viewbook/{bookid}")
     public Optional<BookEntity> viewBook(@PathVariable Long bookid) {
         return bookservice.viewBook(bookid);
     }
+
+//    @GetMapping("/viewbooks")
+//    public Optional<BookEntity> viewBooks(@PathVariable Long bookid) {
+//        return bookservice.viewBook(bookid);
+//    }
 
     @GetMapping("/searchbook")
     public BookEntity searchBook(@RequestParam String booktitle, @RequestParam String authorname, @RequestParam String genre, BookEntity bookentity) {

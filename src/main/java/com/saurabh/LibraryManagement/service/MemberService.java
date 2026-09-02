@@ -3,14 +3,17 @@ package com.saurabh.LibraryManagement.service;
 
 import com.saurabh.LibraryManagement.model.MemberEntity;
 import com.saurabh.LibraryManagement.repo.MemberRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+//import java.util.logging.Logger;
 
 @Service
 public class MemberService {
-
+    private static final Logger log= LoggerFactory.getLogger(MemberService.class);
     @Autowired
     private MemberRepo memberrepo;
 
@@ -27,8 +30,8 @@ public class MemberService {
          return memberrepo.save(memberentity);
     }
 
-    public void deleteMember(MemberEntity memberentity) {
-       memberrepo.delete(memberentity);
+    public void deleteMember(Long memberid) {
+        memberrepo.deleteById(memberid);
 
 
     }

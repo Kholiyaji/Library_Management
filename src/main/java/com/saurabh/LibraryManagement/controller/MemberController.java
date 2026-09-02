@@ -7,6 +7,7 @@ import org.hibernate.annotations.Audited;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Member;
 import java.util.Optional;
 
 @RestController
@@ -19,15 +20,19 @@ public class MemberController {
     public MemberEntity addMember(@RequestBody MemberEntity memberentity) {
     return memberservice.addMember(memberentity);
 }
-     public Optional<MemberEntity> viewMember(@PathVariable Long id) {
-    return memberservice.viewMember(id);
+@GetMapping("/viewmember/{memberid}")
+     public Optional<MemberEntity> viewMember(@PathVariable Long memberid) {
+    return memberservice.viewMember(memberid);
      }
+
+     @PutMapping("/updatemember")
      public MemberEntity updateMember(@RequestBody MemberEntity memberentity) {
     return memberservice.updateMember(memberentity);
      }
-     public String deleteMember(MemberEntity memberentity) {
-      memberservice.deleteMember(memberentity);
-      return "deleted";
+     @DeleteMapping("/deletemember/{memberid}")
+     public String deleteMember(@PathVariable Long memberid) {
+      memberservice.deleteMember(memberid);
+       return"deleted successfully";
      }
 
 }
